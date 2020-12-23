@@ -48,7 +48,7 @@ class BundleMethod:
 
         self._setup_qp()
 
-    def optimize(self):
+    def optimize(self, max_iterations=None):
         '''Find ``w`` that minimizes the function given by
         ``value_gradient_callback``.
         '''
@@ -71,7 +71,7 @@ class BundleMethod:
 
         t = 0
 
-        while True:
+        while max_iterations is None or t < max_iterations:
 
             t += 1
 
