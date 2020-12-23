@@ -40,11 +40,11 @@ class BundleMethod:
         self._lambda = regularizer_weight
         self._eps = eps
 
-        self._solver = pylp.create_quadratic_solver(pylp.Preference.Any)
+        self._solver = pylp.QuadraticSolver(
+            dims + 1,
+            pylp.VariableType.Continuous)
         # one variable for each component of w and for ξ
         self._objective = pylp.QuadraticObjective(dims + 1)
-        self._constraints = pylp.LinearConstraints()
-        self._solution = pylp.Solution()
 
         self._setup_qp()
 
@@ -144,9 +144,6 @@ class BundleMethod:
         # we minimize
         self._objective.set_sense(pylp.Sense.Minimize)
 
-        # init solver
-        self._solver.initialize(self._dims + 1, pylp.VariableType.Continuous)
-
         # set objective (does not change)
         self._solver.set_objective(self._objective)
 
@@ -168,12 +165,11 @@ class BundleMethod:
         constraint.set_relation(pylp.Relation.LessEqual)
         constraint.set_value(-b)
 
-        self._constraints.add(constraint)
+        self._solver.add_constraint(constraint)
 
-    def _find_min_lower_bound(self, w, value):
+    def _find_min_lower_bound(self):
 
         # solve the QP
-        self._solver.set_constraints(self._constraints)
         solution, _ = self._solver.solve()
 
         # read the solution

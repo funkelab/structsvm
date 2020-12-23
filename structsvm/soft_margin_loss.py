@@ -1,4 +1,3 @@
-from .config import solver_preference
 import logging
 import numpy as np
 import pylp
@@ -50,8 +49,9 @@ class SoftMarginLoss:
         self._d = features@ground_truth
 
         # setup solver
-        self._solver = pylp.create_linear_solver(solver_preference)
-        self._solver.initialize(self._num_variables, pylp.VariableType.Binary)
+        self._solver = pylp.LinearSolver(
+            self._num_variables,
+            pylp.VariableType.Binary)
         self._solver.set_constraints(constraints)
 
         # setup objective
