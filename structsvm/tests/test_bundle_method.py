@@ -16,8 +16,8 @@ class TestBundleMethod(unittest.TestCase):
         bundle_method = ssvm.BundleMethod(
             value_gradient,
             dims=1,
-            regularizer_weight=0.0,
+            regularizer_weight=0.0001,
             eps=1e-5)
 
-        w = bundle_method.optimize()
-        self.assertAlmostEqual(w[0], 1.0)
+        w = bundle_method.optimize(max_iterations=100)
+        self.assertAlmostEqual(w[0], 0.99897, places=4)
