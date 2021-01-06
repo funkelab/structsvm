@@ -1,6 +1,7 @@
 import logging
 import numpy as np
 import pylp
+from .hamming_costs import HammingCosts
 
 logger = logging.getLogger(__name__)
 
@@ -15,11 +16,6 @@ class SoftMarginLoss:
 
     Args:
 
-        costs (tuple of ndarray and float):
-
-             The linear cost function Δ(y',y) to use, as a tuple (a, b), such
-             that Δ(y',y) = <a(y'),y> + b.
-
         constraints (pylp.LinearConstraints):
 
              Constraints on y.
@@ -31,9 +27,18 @@ class SoftMarginLoss:
         ground_truth (ndarray, binary):
 
              The ground truth y'.
+
+        costs (class, optional):
+
+             The cost function Δ(y',y) to use. Defaults to Hamming costs.
     '''
 
-    def __init__(self, costs, constraints, features, ground_truth):
+    def __init__(
+            self,
+            constraints,
+            features,
+            ground_truth,
+            costs=HammingCosts):
 
         self._num_variables = ground_truth.size
 
@@ -42,8 +47,9 @@ class SoftMarginLoss:
 
         # the linear and constant term of the cost function Δ(y',y):
         # Δ(y',y) = <g,y> + b
-        self._b = costs.get_constant_offset()
-        self._g = costs.get_coefficients()
+        self._costs = costs(ground_truth)
+        self._b = self._costs.get_offset()
+        self._g = self._costs.get_coefficients()
 
         # combined features of the ground truth and current y*
         self._d = features@ground_truth
@@ -97,7 +103,7 @@ class SoftMarginLoss:
         #          = d       - e
 
         # compute gradient
-        e = self._features@np.array(solution.get_vector())
+        e = self._features@np.array(solution)
         gradient = self._d - e
 
         return value, gradient
