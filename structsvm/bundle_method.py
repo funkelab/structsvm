@@ -122,8 +122,8 @@ class BundleMethod:
 
                 else:
 
-                    logger.error("ε < 0 -- something went wrong")
-                    logger.error(
+                    logger.warning("ε < 0 -- something went wrong")
+                    logger.warning(
                         "(if |ε| is very small this might still be fine)")
 
                 break
