@@ -6,7 +6,7 @@ logger = logging.getLogger(__name__)
 
 
 class BundleMethod:
-    """Create a new bundle method for the given value and gradient callback.
+    '''Create a new bundle method for the given value and gradient callback.
 
     Args:
 
@@ -26,9 +26,15 @@ class BundleMethod:
         eps:
 
            Convergence threshold.
-    """
+    '''
 
-    def __init__(self, value_gradient_callback, dims, regularizer_weight, eps):
+    def __init__(
+            self,
+            value_gradient_callback,
+            dims,
+            regularizer_weight,
+            eps):
+
         self._value_gradient_callback = value_gradient_callback
         self._dims = dims
         self._lambda = regularizer_weight
@@ -47,9 +53,9 @@ class BundleMethod:
         self._setup_qp()
 
     def optimize(self, max_iterations=None):
-        """Find ``w`` that minimizes the function given by
+        '''Find ``w`` that minimizes the function given by
         ``value_gradient_callback``.
-        """
+        '''
 
         # 1. w_0 = 0, t = 0
         # 2. t++
@@ -70,6 +76,7 @@ class BundleMethod:
         t = 0
 
         while max_iterations is None or t < max_iterations:
+
             t += 1
 
             logger.info("----------------- iteration %d", t)
@@ -86,8 +93,8 @@ class BundleMethod:
 
             # update smallest observed value of regularized L
             min_value = min(
-                min_value, L_w_tm1 + 0.5 * self._lambda * np.dot(w_tm1, w_tm1)
-            )
+                min_value,
+                L_w_tm1 + 0.5*self._lambda*np.dot(w_tm1, w_tm1))
 
             logger.debug(" min_i L(w_i) + ½λ|w_i|² is: %f", min_value)
 
@@ -112,23 +119,28 @@ class BundleMethod:
 
             # converged?
             if eps_t <= self._eps:
+
                 if eps_t >= 0:
+
                     logger.info("converged!")
 
                 else:
+
                     logger.warning("ε < 0 -- something went wrong")
-                    logger.warning("(if |ε| is very small this might still be fine)")
+                    logger.warning(
+                        "(if |ε| is very small this might still be fine)")
 
                 break
 
         return w
 
     def _setup_qp(self):
+
         # w* = argmin λ½|w|² + ξ, s.t. <w,a_i> + b_i ≤ ξ ∀i
 
         # regularizer
         for i in range(self._dims):
-            self._objective.set_quadratic_coefficient(i, i, 0.5 * self._lambda)
+            self._objective.set_quadratic_coefficient(i, i, 0.5*self._lambda)
 
         # ξ
         self._objective.set_coefficient(self._dims, 1.0)
@@ -140,9 +152,9 @@ class BundleMethod:
         self._solver.set_objective(self._objective)
 
     def _add_hyperplane(self, a, b):
-        """Add a hyperplane to the bundle. The hyperplane is parameterized by a
+        '''Add a hyperplane to the bundle. The hyperplane is parameterized by a
         vector ``a`` and an offset ``b``.
-        """
+        '''
 
         # <w,a> + b ≤  ξ
         #       <=>
@@ -160,6 +172,7 @@ class BundleMethod:
         self._solver.add_constraint(constraint)
 
     def _find_min_lower_bound(self):
+
         # solve the QP
         solution, _ = self._solver.solve()
 
