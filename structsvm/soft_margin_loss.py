@@ -38,7 +38,7 @@ class SoftMarginLoss:
             constraints,
             features,
             ground_truth,
-            costs=HammingCosts):
+            costs=None):
 
         self._num_variables = ground_truth.size
 
@@ -47,7 +47,9 @@ class SoftMarginLoss:
 
         # the linear and constant term of the cost function Δ(y',y):
         # Δ(y',y) = <g,y> + b
-        self._costs = costs(ground_truth)
+        if costs is None:
+            costs = HammingCosts(ground_truth)
+        self._costs = costs
         self._b = self._costs.get_offset()
         self._g = self._costs.get_coefficients()
 
