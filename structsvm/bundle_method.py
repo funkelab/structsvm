@@ -1,6 +1,6 @@
 import logging
 import numpy as np
-import pylp
+import ilpy
 
 logger = logging.getLogger(__name__)
 
@@ -40,11 +40,11 @@ class BundleMethod:
         self._lambda = regularizer_weight
         self._eps = eps
 
-        self._solver = pylp.QuadraticSolver(
+        self._solver = ilpy.QuadraticSolver(
             dims + 1,
-            pylp.VariableType.Continuous)
+            ilpy.VariableType.Continuous)
         # one variable for each component of w and for ξ
-        self._objective = pylp.QuadraticObjective(dims + 1)
+        self._objective = ilpy.QuadraticObjective(dims + 1)
 
         self._setup_qp()
 
@@ -142,7 +142,7 @@ class BundleMethod:
         self._objective.set_coefficient(self._dims, 1.0)
 
         # we minimize
-        self._objective.set_sense(pylp.Sense.Minimize)
+        self._objective.set_sense(ilpy.Sense.Minimize)
 
         # set objective (does not change)
         self._solver.set_objective(self._objective)
@@ -156,13 +156,13 @@ class BundleMethod:
         #       <=>
         # <w,a> - ξ ≤ -b
 
-        constraint = pylp.LinearConstraint()
+        constraint = ilpy.LinearConstraint()
 
         for i in range(self._dims):
             constraint.set_coefficient(i, a[i])
 
         constraint.set_coefficient(self._dims, -1.0)
-        constraint.set_relation(pylp.Relation.LessEqual)
+        constraint.set_relation(ilpy.Relation.LessEqual)
         constraint.set_value(-b)
 
         self._solver.add_constraint(constraint)

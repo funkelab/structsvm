@@ -1,5 +1,5 @@
 import structsvm as ssvm
-import pylp
+import ilpy
 import unittest
 import logging
 import numpy as np
@@ -18,11 +18,11 @@ class TestSsvm(unittest.TestCase):
         ground_truth = np.zeros((num_variables,))
         ground_truth[0] = 1
 
-        constraints = pylp.LinearConstraints()
-        chose_one = pylp.LinearConstraint()
+        constraints = ilpy.LinearConstraints()
+        chose_one = ilpy.LinearConstraint()
         for i in range(num_variables):
             chose_one.set_coefficient(i, 1.0)
-        chose_one.set_relation(pylp.Relation.Equal)
+        chose_one.set_relation(ilpy.Relation.Equal)
         chose_one.set_value(1.0)
         constraints.add(chose_one)
 

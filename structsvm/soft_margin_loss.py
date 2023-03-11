@@ -1,6 +1,6 @@
 import logging
 import numpy as np
-import pylp
+import ilpy
 from .hamming_costs import HammingCosts
 
 logger = logging.getLogger(__name__)
@@ -16,7 +16,7 @@ class SoftMarginLoss:
 
     Args:
 
-        constraints (pylp.LinearConstraints):
+        constraints (ilpy.LinearConstraints):
 
              Constraints on y.
 
@@ -55,14 +55,14 @@ class SoftMarginLoss:
         self._d = features@ground_truth
 
         # setup solver
-        self._solver = pylp.LinearSolver(
+        self._solver = ilpy.LinearSolver(
             self._num_variables,
-            pylp.VariableType.Binary)
+            ilpy.VariableType.Binary)
         self._solver.set_constraints(constraints)
 
         # setup objective
-        self._objective = pylp.LinearObjective(self._num_variables)
-        self._objective.set_sense(pylp.Sense.Maximize)
+        self._objective = ilpy.LinearObjective(self._num_variables)
+        self._objective.set_sense(ilpy.Sense.Maximize)
 
     def value_and_gradient(self, w):
 
