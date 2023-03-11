@@ -14,7 +14,7 @@ class HammingCosts(LinearCosts):
         #   with l_i := -1 if y'_i = 1
         #                1 else
 
-        coefficients = np.ones_like(ground_truth, dtype=np.float)
+        coefficients = np.ones_like(ground_truth, dtype=np.float32)
         coefficients -= 2*ground_truth
         offset = np.sum(ground_truth)
 
