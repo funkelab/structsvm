@@ -12,6 +12,7 @@ requires-python = ">=3.8"
 license = { text = "MIT" }
 authors = [
     { email = "funkej@janelia.hhmi.org", name = "Jan Funke" },
+    { email = "talley.lambert@gmail.com", name = "Talley Lambert" },
 ]
 dynamic = ["version"]
 dependencies = ['ilpy', 'numpy']
