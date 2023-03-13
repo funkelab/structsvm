@@ -40,9 +40,13 @@ class BundleMethod:
         self._lambda = regularizer_weight
         self._eps = eps
 
-        self._solver = ilpy.QuadraticSolver(
-            dims + 1,
-            ilpy.VariableType.Continuous)
+        try:
+            self._solver = ilpy.QuadraticSolver(dims + 1, ilpy.VariableType.Continuous)
+        except RuntimeError as e:
+            raise RuntimeError(
+                "Unable to create ilpy.QuadraticSolver. This functionality "
+                "currently requires a valid Gurobi license."
+            ) from e
         # one variable for each component of w and for ξ
         self._objective = ilpy.QuadraticObjective(dims + 1)
 
