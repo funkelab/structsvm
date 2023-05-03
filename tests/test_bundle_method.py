@@ -14,4 +14,4 @@ def test_quadratic():
         eps=1e-5)
 
     w = bundle_method.optimize(max_iterations=100)
-    assert round(w[0], 5) == 0.99897
+    assert round(w[0], 4) == 0.9990

@@ -4,7 +4,7 @@ import ilpy
 from .hamming_costs import HammingCosts
 
 logger = logging.getLogger(__name__)
-
+ILPY_V02 = ilpy.__version__.split(".")[:2] < ["0", "3"]
 
 class SoftMarginLoss:
     '''Implements the soft margin loss, i.e.,
@@ -96,7 +96,8 @@ class SoftMarginLoss:
 
         # solve
         self._solver.set_objective(self._objective)
-        solution, _ = self._solver.solve()
+        # solve the QP
+        solution = self._solver.solve()[0] if ILPY_V02 else self._solver.solve()
 
         # read optimal value L(w)
         value = solution.get_value()
