@@ -3,6 +3,7 @@ import numpy as np
 import ilpy
 
 logger = logging.getLogger(__name__)
+ILPY_V02 = ilpy.__version__.split(".")[:2] < ["0", "3"]
 
 
 class BundleMethod:
@@ -174,7 +175,7 @@ class BundleMethod:
     def _find_min_lower_bound(self):
 
         # solve the QP
-        solution, _ = self._solver.solve()
+        solution = self._solver.solve()[0] if ILPY_V02 else self._solver.solve()
 
         # read the solution
         w = np.array([solution[i] for i in range(self._dims)])
