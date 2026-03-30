@@ -18,3 +18,9 @@ class LinearCosts:
 
     def get_offset(self) -> float:
         return self.offset
+
+    def set_scaling_factor(self, scaling_factor: float) -> None:
+        self.scaling_factor = scaling_factor
+
+    def get_scaling_factor(self) -> float:
+        return self.scaling_factor

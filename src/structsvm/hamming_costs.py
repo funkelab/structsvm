@@ -27,3 +27,4 @@ class HammingCosts(LinearCosts):
 
         self.set_coefficients(coefficients)
         self.set_offset(offset)
+        self.set_scaling_factor(np.sum(mask) if mask is not None else ground_truth.size)
