@@ -60,9 +60,14 @@ class SoftMarginLoss:
         self._costs = costs
         self._b = self._costs.get_offset()
         self._g = self._costs.get_coefficients()
+        self._scale = self._costs.get_scaling_factor()
+
+        self._b = self._b / self._scale
+        self._g = self._g / self._scale
+        self._features = self._features / self._scale
 
         # combined features of the ground truth and current y*
-        self._d = features @ ground_truth
+        self._d = self._features @ ground_truth
 
         # setup solver
         self._solver = ilpy.Solver(self._num_variables, ilpy.VariableType.Binary)
