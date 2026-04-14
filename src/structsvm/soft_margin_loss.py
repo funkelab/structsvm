@@ -111,8 +111,7 @@ class SoftMarginLoss:
         solution = self._solver.solve()
 
         # read optimal value L(w)
-        # get_value() excludes the constant term, so add it back
-        value = solution.get_value() + a + self._b
+        value = solution.get_value()
 
         # ∂L(w)/∂w = φ(x')y' - φ(x')y*
         #          = d       - e
